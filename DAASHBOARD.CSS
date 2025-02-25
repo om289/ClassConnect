@@ -119,6 +119,52 @@ header input {
     font-size: 14px;
 }
 
+/* KPI Cards Grid */
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.kpi-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid #ff6600;
+    transition: transform 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+}
+
+.kpi-card h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.kpi-card .kpi-value {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #1a3b5d;
+}
+
+.kpi-card .kpi-trend {
+    font-size: 12px;
+    color: #666;
+}
+
+.kpi-card .kpi-trend.positive {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
 /* Dashboard */
 .dashboard {
     display: flex;
