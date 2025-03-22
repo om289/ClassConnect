@@ -7,6 +7,31 @@ document.querySelectorAll('.sidebar ul li').forEach(item => {
     });
 });
 
+// Sidebar Slide-out & Mobile Toggle
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'sidebar-toggle-btn';
+        toggleBtn.innerHTML = '☰';
+        document.body.appendChild(toggleBtn);
+
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+});
+
 // Search Bar Focus Effect
 const searchInput = document.querySelector("header input");
 searchInput.addEventListener("focus", () => {
