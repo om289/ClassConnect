@@ -1,2 +1,2 @@
 # ClassConnect
-a basic classroom likewebsite
+a basic classroom likewebsite.
