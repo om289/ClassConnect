@@ -48,6 +48,7 @@ while($row=mysqli_fetch_array($rs))
 			}
 			?>
 			</table>
+			
 		</div>
 	</div>
 	<?php include('allfoot.php'); ?>

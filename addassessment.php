@@ -46,6 +46,8 @@ $fname = $_SESSION[ "fname" ];
 		
 			<fieldset>
 				<legend><a href="addassessment.php">Add Assessment</a></legend>
+				<a href="addmcq.php" class="btn btn-success" style="margin-bottom: 15px;">Create MCQ</a>
+
 				<form action="" method="POST" name="AddAssessment">
 					<table class="table table-hover">
 
