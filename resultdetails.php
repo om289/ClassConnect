@@ -2,13 +2,12 @@
 session_start();
 
 if ($_SESSION["fidx"] == "" || $_SESSION["fidx"] == NULL) {
-    header('Location:facultylogin');
+    header('Location:facultylogin.php'); // You can change this based on your decision
 }
 
 $userid = $_SESSION["fidx"];
 $fname = $_SESSION["fname"];
 ?>
-
 <?php include('fhead.php'); ?>
 <div class="container">
     <div class="row">
@@ -36,7 +35,6 @@ $fname = $_SESSION["fname"];
     <div class="row">
         <div class="col-md-8">
             <h3> Welcome Faculty : <a href="welcomefaculty.php"><span style="color:#FF0004"><?php echo $fname; ?></span></a></h3>
-
             <?php
             include('database.php');
             $sql = "SELECT * FROM result";
@@ -63,11 +61,8 @@ $fname = $_SESSION["fname"];
 
             echo "</table>";
             ?>
-
             <!-- 📥 Download Button -->
             <a href="download_results_excel.php" class="btn btn-success btn-sm" target="_blank">Download Results</a>
-
-
         </div>
     </div>
 </div>
