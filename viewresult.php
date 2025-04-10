@@ -19,7 +19,7 @@ $userlname = $_SESSION[ "lname" ];
 include('database.php');
 $seno=$_GET['seno'];
 //below query will print the existing record of result
-$sql="SELECT * FROM result WHERE Eno='$seno'";
+$sql="SELECT * FROM result WHERE RollNumber='$seno'";
 $rs=mysqli_query($connect,$sql);
 echo "<h2 class='page-header'>Result View</h2>";
 echo "<table class='table table-striped' style='width:100%'>
@@ -37,7 +37,14 @@ while($row=mysqli_fetch_array($rs))
 					<?PHP echo $row['RsID'];?>
 				</td>
 				<td>
-					<?PHP echo $row['Eno'];?>
+					 <?php
+                    // Check if the 'Eno' key exists in the $row array before accessing it
+                    if (isset($row['Eno'])) {
+                        echo $row['Eno'];
+                    } else {
+                        echo "N/A"; // Display a default value if 'Eno' is not set
+                    }
+                    ?>
 				</td>
 				
 				<td>
@@ -48,6 +55,7 @@ while($row=mysqli_fetch_array($rs))
 			}
 			?>
 			</table>
+			
 		</div>
 	</div>
 	<?php include('allfoot.php'); ?>

@@ -22,7 +22,7 @@ $fname = $_SESSION[ "fname" ];
 			//below will print all student details to admin
 			echo "<table class='table table-striped' style='width:100%'>
 <tr>
-<th>Enrolment Number</th>
+<th>Roll Number</th>
 <th>First Name</th>
 <th>Last Name</th>
 <th>Father Name</th>
@@ -38,7 +38,7 @@ $fname = $_SESSION[ "fname" ];
 
 			<tr>
 				<td>
-					<?PHP echo $row['Eno'];?>
+					<?PHP echo $row['RollNumber'];?>
 				</td>
 				<td>
 					<?PHP echo $row['FName'];?>
@@ -70,6 +70,10 @@ $fname = $_SESSION[ "fname" ];
 			</tr>
 			<?php } ?>
 			</table>
+			<form method="post" action="download_students_excel.php">
+				<button type="submit" class="btn btn-success" style="margin-bottom: 15px;">Download Student Details (Excel)</button>
+			</form>
+
 		</div>
 	</div>
 	<?php include('allfoot.php'); ?>

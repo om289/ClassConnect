@@ -1,22 +1,23 @@
 <?php
 session_start();
 
-if ( $_SESSION[ "fidx" ] == "" || $_SESSION[ "fidx" ] == NULL ) {
-	header( 'Location:facultylogin.php' );
+if (empty($_SESSION["fidx"])) {
+	header('Location:facultylogin.php');
+	exit();
 }
-$userid = $_SESSION[ "fidx" ];
+$userid = $_SESSION["fidx"];
 $fname = $_SESSION["fname"];
 ?>
-<?php include('fhead.php');  ?>
+<?php include('fhead.php'); ?>
 <div class="container">
 	<div class="row">
 		<?php
-		if ( isset( $_REQUEST[ 'deleteid' ] ) ) {
-			include( "database.php" );
-			$deleteid = $_GET[ 'deleteid' ];
+		if (isset($_REQUEST['deleteid'])) {
+			include("database.php");
+			$deleteid = mysqli_real_escape_string($connect, $_GET['deleteid']);
 			$sql = "DELETE FROM `query` WHERE Qid = '$deleteid'";
 
-			if ( mysqli_query( $connect, $sql ) ) {
+			if (mysqli_query($connect, $sql)) {
 				echo "
 					<br><br>
 					<div class='alert alert-success fade in'>
@@ -24,52 +25,109 @@ $fname = $_SESSION["fname"];
 					<strong>Success!</strong> Query Details has been deleted.
 					</div>";
 			} else {
-				echo "<br><Strong>Query Details Updation Faliure. Try Again</strong><br> Error Details: " . $sql . "<br>" . mysqli_error( $connect );
+				echo "<br><Strong>Query Details Deletion Failure. Try Again</strong><br> Error Details: " . mysqli_error($connect);
 			}
-			mysqli_close( $connect );
+			mysqli_close($connect);
 		}
 		?>
 	</div>
 	<div class="row">
 		<div class="col-md-8">
-			<h3> Welcome Faculty : <a href="welcomefaculty.php" ><span style="color:#FF0004"> <?php echo $fname; ?></span></a> </h3>
+			<h3> Welcome Faculty : <a href="welcomefaculty.php"><span style="color:#FF0004"> <?php echo htmlspecialchars($fname); ?></span></a> </h3>
 			<?php
-			include( "database.php" );
-			$sql = "select * from  query";
-			$result = mysqli_query( $connect, $sql );
-			//below table will display all query posted by student or guest to faculty
-			echo "<h3 class='page-header' >Query Details</h3>";
-			echo "<table class='table table-striped' style='width:100%'>
-				<tr>
-					<th>Query id</th>
-					<th>Email id</th>
-					<th>Query</th>
-					<th>Answer</th>
-					<th>Edit</th>
-					<th>Delete</th>
-				<tr>";
-			while ( $row = mysqli_fetch_array( $result ) ) {
+			include("database.php");
+
+			if (!$connect) {
+				echo "
+					<div class='alert alert-danger'>
+						<strong>Error!</strong> Failed to connect to the database. Please try again later.
+					</div>";
+				error_log("Database Connection Error: " . mysqli_connect_error());
+				exit();
+			}
+
+			$facultyID = mysqli_real_escape_string($connect, $_SESSION["fidx"]);
+			$querySql = "SELECT q.Qid, q.Query, s.FName AS StudentName, q.Answer 
+				FROM query q 
+				JOIN studenttable s ON q.StudentID = s.RollNumber 
+				WHERE q.FacultyID = '$facultyID'";
+
+			$queryResult = mysqli_query($connect, $querySql);
+
+			if (!$queryResult) {
+				echo "
+					<div class='alert alert-danger'>
+						<strong>Error!</strong> Failed to fetch queries. Please try again later.
+					</div>";
+				error_log("SQL Error: " . mysqli_error($connect));
+			} else {
 				?>
-			<tr>
-				<td>
-					<?PHP echo $row['Qid'];?>
-				</td>
-				<td>
-					<?PHP echo $row['Eid'];?>
-				</td>
-				<td>
-					<?PHP echo $row['Query'];?>
-				</td>
-				<td>
-					<?PHP echo $row['Ans'];?>
-				</td>
-				<td><a href="updatequery.php?gid=<?php echo $row['Qid']; ?>"><input type="button" Value="Edit" class="btn btn-info btn-sm"></a>
-				</td>
-				<td><a href="qureydetails.php?deleteid=<?php echo $row['Qid']; ?>"><input type="button" Value="Delete" name="" class="btn btn-info btn-sm"></a>
-				</td>
-			</tr>
-			<?php } ?>
-			</table>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Query ID</th>
+							<th>Student Name</th>
+							<th>Query</th>
+							<th>Answer</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+						if (mysqli_num_rows($queryResult) > 0) {
+							while ($row = mysqli_fetch_assoc($queryResult)) { ?>
+								<tr>
+									<td><?php echo htmlspecialchars($row['Qid']); ?></td>
+									<td><?php echo htmlspecialchars($row['StudentName']); ?></td>
+									<td><?php echo htmlspecialchars($row['Query']); ?></td>
+									<td><?php echo $row['Answer'] ? htmlspecialchars($row['Answer']) : 'Not answered yet'; ?></td>
+									<td>
+										<?php if (!$row['Answer']) { ?>
+											<form method="POST" action="qureydetails.php">
+												<input type="hidden" name="queryID" value="<?php echo htmlspecialchars($row['Qid']); ?>">
+												<textarea name="answer" class="form-control" required></textarea>
+												<button type="submit" class="btn btn-primary">Submit Answer</button>
+											</form>
+										<?php } ?>
+									</td>
+								</tr>
+							<?php } 
+						} else {
+							echo "
+								<tr>
+									<td colspan='5' class='text-center'>No queries found.</td>
+								</tr>";
+						} ?>
+					</tbody>
+				</table>
+				<?php
+			}
+			?>
 		</div>
 	</div>
-	<?php include('allfoot.php');  ?>
+	<?php include('allfoot.php'); ?>
+</div>
+</body>
+</html>
+
+<?php
+if (isset($_POST['queryID']) && isset($_POST['answer'])) {
+	include("database.php");
+	$queryID = mysqli_real_escape_string($connect, $_POST['queryID']);
+	$answer = mysqli_real_escape_string($connect, $_POST['answer']);
+
+	$sql = "UPDATE `query` SET `Answer` = '$answer' WHERE `Qid` = '$queryID';";
+	if (mysqli_query($connect, $sql)) {
+		// Redirect to avoid form resubmission
+		header('Location: qureydetails.php?success=1');
+		exit();
+	} else {
+		echo "
+			<div class='alert alert-danger'>
+				<strong>Error!</strong> Failed to submit the answer. Please try again.
+			</div>";
+		error_log("SQL Update Error: " . mysqli_error($connect));
+	}
+	mysqli_close($connect);
+}
+?>

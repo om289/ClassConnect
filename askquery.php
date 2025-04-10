@@ -17,13 +17,26 @@ $userlname = $_SESSION[ "lname" ];
 			<h3> Welcome <a href="welcomestudent.php" <?php echo "<span style='color:red'>".$userfname." ".$userlname."</span>";?> </a></h3>
 			<?php 
 include('database.php');
-$eid=$_GET['eid']; //get data form another page
 
+// Check if 'eid' is set in the URL, otherwise use session variable
+if (!isset($_GET['eid'])) {
+    if (isset($_SESSION['sidx'])) {
+        $eid = $_SESSION['sidx']; // Use session variable as fallback
+    } else {
+        die("<div class='alert alert-danger'>Enrollment ID is missing. Please try again.</div>");
+    }
+} else {
+    $eid = $_GET['eid']; // Get data from URL
+}
+
+// Fetch faculty list for the dropdown
+$facultyQuery = "SELECT FID, FName FROM facutlytable";
+$facultyResult = mysqli_query($connect, $facultyQuery);
 ?>
 			<div class="container">
 				<div class="row">
 					<div class="col-md-5">
-						<form action="" method="POST" name="update">
+						<form method="POST" action="submitquery.php">
 							<fieldset>
 								<legend>Query Details</legend>
 								<table>
@@ -40,11 +53,24 @@ $eid=$_GET['eid']; //get data form another page
 									<table>
 									</table>
 									<td>
-										<tr><strong><h3>Query :</h3></strong> </tr><br <tr><textarea rows="10" cols="40" name="squeryx" class="form-control" required></textarea>
+										<tr><strong><h3>Query :</h3></strong> </tr><br <tr><textarea rows="10" cols="40" name="query" class="form-control" required></textarea>
 										</tr>
 									</td>
 								</table>
 								<br>
+								<div class="form-group">
+									<label for="faculty">Select Faculty:</label>
+									<select class="form-control" id="faculty" name="faculty" required>
+										<option value="">-- Select Faculty --</option>
+										<?php while ($row = mysqli_fetch_assoc($facultyResult)) { ?>
+											<option value="<?php echo $row['FID']; ?>">
+												<?php echo $row['FName']; ?>
+											</option>
+										<?php } ?>
+									</select>
+								</div>
+								<br>
+								<input type="hidden" name="eid" value="<?php echo $eid; ?>">
 								<input type="submit" value="Post Query!" name="addq" class="btn btn-primary">
 							</fieldset>
 						</form>

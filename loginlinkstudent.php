@@ -1,36 +1,37 @@
 <?php
 session_start();
-?>
 
-<?php
-$x = $_POST[ "sid" ];
-$y = $_POST[ "pass" ];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["email"];
+    $password = $_POST["pass"];
 
-include( "database.php" );
-//searching login id and password entered in $x & $y
-$sql = "select * from studenttable where Eid='" . $x . "' and Pass='" . $y . "'";
+    include("database.php");
 
-$result = mysqli_query( $connect, $sql );
+    // Correct SQL query to match the database structure
+    $sql = "SELECT * FROM studenttable WHERE Email = '$email' AND Pass = '$password'";
+    $result = mysqli_query($connect, $sql);
 
-if ( $result->num_rows > 0 )
-
-//session create
-{
-	if ( $row = $result->fetch_assoc() ) {
-		$_SESSION[ "sidx" ] = $row[ "Eid" ];
-		$_SESSION[ "fname" ] = $row[ "FName" ];
-		$_SESSION[ "lname" ] = $row[ "LName" ];
-		$_SESSION[ "seno" ] = $row[ "Eno" ];
-
-	} //redirecting to welcome student page
-	header( 'Location:welcomestudent.php' );
-
+    // Ensure session variables for first name and last name are set
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['fname'] = $row['FName']; // Set first name
+        $_SESSION['lname'] = $row['LName']; // Set last name
+        $_SESSION['sidx'] = $row['RollNumber'];
+        $_SESSION['seno'] = $row['RollNumber'];
+        $_SESSION['course'] = $row['Course'];
+        $_SESSION['year'] = $row['Year'];
+        $_SESSION['studentID'] = $row['RollNumber']; // Set StudentID for session validation
+        header('Location:welcomestudent.php');
+    } else {
+        echo "<script>alert('Invalid Email or Password');</script>";
+        echo "<script>window.location.href='studentlogin.php';</script>";
+    }
 } else {
-	//error message if SQL query fails
-	echo "<h3><span style='color:red; '>Invalid Student ID & Password. Page Will redirect to Login Page after 2 seconds </span></h3>";
-	header( "refresh:3;url=studentlogin.php" );
+    // Error message if form data is missing
+    echo "<h3><span style='color:red;'>Please enter Email and Password. Redirecting to Login Page...</span></h3>";
+    header("refresh:3;url=studentlogin.php");
 }
-//close the connection
-$connect->close();
 
+// Close the database connection
+mysqli_close($connect);
 ?>

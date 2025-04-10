@@ -1,17 +1,21 @@
-
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p class="footer text-center">> project Made by <strong>om,sid,lakshay,nikunj</strong></p>
-                </div>
-            </div>
+<!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Somaiya Vidyavihar. All rights reserved. Made by Siddhart Koul, Nikunj Maru, Om Metha, Lakshay Lakhnotra, With Guidance: Prof. Jyoti Wadhmare</p>
         </footer>
 
     </div>
     <!-- /.container -->
 <style>
-.footer{background: #000; padding: 10px 0px; color: #fff;position: fixed;left: 0; right: 0;bottom: -10px;}
+.footer {
+    background-color: #B7202E; /* InPower Red */
+    color: #FFFFFF; /* White */
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 </style>
     <!-- jQuery -->
     <script src="js/jquery.js"></script>

@@ -21,6 +21,9 @@ $fname = $_SESSION[ "fname" ];
 			$v_url = $_POST[ 'VideoURL' ];
 			$v_info = $_POST[ 'Videoinfo' ];
 			
+			// Fetch course and year from the form
+			$course = $_POST['course'];
+			$year = $_POST['year'];
 
 			$done = "
 					<center>
@@ -33,11 +36,13 @@ $fname = $_SESSION[ "fname" ];
 					</center>
 					";
 
-			$sql = "INSERT INTO `Video` (`V_Title`, `V_Url`, `V_Remarks`) VALUES ('$title','$v_url','$v_info')";
-			//close the connection
-			mysqli_query( $connect, $sql );
-
-			echo $done;
+			 // Ensure the video details are inserted into the `video` table
+			$sql = "INSERT INTO video (VideoTitle, VideoURL, Description, Course, Year) VALUES ('$title', '$v_url', '$v_info', '$course', '$year')";
+			if (mysqli_query($connect, $sql)) {
+				echo "<div class='alert alert-success'>Video added successfully.</div>";
+			} else {
+				echo "<div class='alert alert-danger'>Error: " . mysqli_error($connect) . "</div>";
+			}
 		}
 
 		?>
@@ -67,7 +72,35 @@ $fname = $_SESSION[ "fname" ];
 								<textarea name="Videoinfo" rows="5" cols="150"></textarea>
 							</td>
 						</tr>
-						
+						<tr>
+							<td><strong>Course</strong> </td>
+							<td>
+								<div class="form-group">
+									<label for="course">Course:</label>
+									<select class="form-control" id="course" name="course" required>
+										<option value="Computer Engineering">Computer Engineering</option>
+										<option value="Information Technology">Information Technology</option>
+										<option value="Electronics & Telecommunication">Electronics & Telecommunication</option>
+										<option value="AI/DS">AI/DS</option>
+										<option value="BS&H">BS&H</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><strong>Year</strong> </td>
+							<td>
+								<div class="form-group">
+									<label for="year">Year:</label>
+									<select class="form-control" id="year" name="year" required>
+										<option value="First Year">First Year</option>
+										<option value="Second Year">Second Year</option>
+										<option value="Third Year">Third Year</option>
+										<option value="Fourth Year">Fourth Year</option>
+									</select>
+								</div>
+							</td>
+						</tr>
 						<td><button type="submit" name="submit" class="btn btn-primary">Add Video</button>
 						</td>
 						

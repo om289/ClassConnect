@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,59 +26,52 @@
     <![endif]-->
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            margin: 0; /* Remove white space above the page */
+            padding: 0;
+        }
+        .navbar {
+            background-color: #B7202E; /* InPower Red */
+            color: #FFFFFF; /* White */
+            margin: 0; /* Align navbar to the top */
+        }
+        .navbar a {
+            color: #FFFFFF; /* White */
+            font-weight: bold;
+            padding: 12px 20px; /* Ensure consistent size with header */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Add spacing between buttons */
+        }
+        .navbar a:hover {
+            background-color: #ED1C24; /* Vitality Red */
+        }
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .navbar-nav {
+            margin-left: auto; /* Align buttons to the right */
+        }
+    </style>
 </head>
 
 <body style="overflow-x: hidden;">
 <header>
 <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index">Cloud Classrooms</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="about">About</a>
-                    </li>
-					<li>
-                        <a href="registrationform">Registration</a>
-                    </li>
-                     <li>
-                        <a href="takeassessment">Take Assessment</a>
-                    </li>
-                    <li>
-                        <a href="viewresult">Result</a>
-                    </li>
-  					<li>
-                        <a href="postquerypublic">Post Qurey</a>
-                    </li>
-					<li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="studentlogin">Student Login</a>
-                            </li>
-                            <li>
-                                <a href="facultylogin">Faculty Login</a>
-                            </li>
-                            <li>
-                                <a href="adminlogin">Admin Login</a>
-                            </li>
-                        </ul>
-                    </li> 
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">KJ Somaiya Institute of Technology, Sion</a>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="about.php">About</a>
+            <a class="nav-item nav-link" href="registrationform.php">Registration</a>
+            <a class="nav-item nav-link" href="takeassessment.php">Take Assessment</a>
+            <a class="nav-item nav-link" href="viewresult.php">Result</a>
+            <a class="nav-item nav-link" href="postquerypublic.php">Post Query</a>
+            <a class="nav-item nav-link" href="studentlogin.php">Login</a>
         </div>
-        <!-- /.container -->
     </nav>
 </header>
+</body>
+</html>

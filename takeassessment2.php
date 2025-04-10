@@ -2,11 +2,6 @@
 session_start();
 
 // Debugging session data
-echo "<pre>";
-print_r($_SESSION);  // View all session data for debugging
-echo "</pre>";
-
-// Session validation
 if (!isset($_SESSION["seno"]) || $_SESSION["seno"] == "") {
     echo "Session value for 'seno' is missing!";
     exit();
@@ -15,7 +10,15 @@ if (!isset($_SESSION["seno"]) || $_SESSION["seno"] == "") {
 $userid = $_SESSION["seno"];  // Correct reference for student ID
 $userfname = $_SESSION["fname"];
 $userlname = $_SESSION["lname"];
-$sEno = $_SESSION["seno"];  // Ensure this matches `Eno` in `studenttable`
+$sEno = $_SESSION["seno"];  // Ensure this matches `RollNumber` in `studenttable`
+
+// Include the database connection
+include('database.php'); // Ensure this file defines the `$conn` variable
+
+// Check if the database connection is established
+if (!isset($conn) || !$conn) {
+    die("Database connection failed: " . mysqli_connect_error());
+}
 
 include('studenthead.php');
 ?>
@@ -28,14 +31,13 @@ include('studenthead.php');
 
             <?php
             $exid = $_GET['exid'];
-            include('database.php');
 
             // Fetch Student and Exam Details
-            $sql = "SELECT * FROM studenttable WHERE Eno='$sEno'";
+            $sql = "SELECT * FROM studenttable WHERE RollNumber='$sEno'";
             $sql2 = "SELECT * FROM examdetails WHERE ExamID='$exid'";
 
-            $result = mysqli_query($connect, $sql);
-            $result2 = mysqli_query($connect, $sql2);
+            $result = mysqli_query($conn, $sql);
+            $result2 = mysqli_query($conn, $sql2);
 
             if ($row = mysqli_fetch_array($result)) { ?>
             
@@ -46,7 +48,7 @@ include('studenthead.php');
                         <table>
                             <tr>
                                 <td><strong>Enrolment number :</strong></td>
-                                <td><?php echo $row['Eno']; ?></td>
+                                <td><?php echo $row['RollNumber']; ?></td>
                             </tr>
                             <tr>
                                 <td><strong>Name :</strong></td>
@@ -110,39 +112,34 @@ include('studenthead.php');
             <?php
             }
 
+            // Store each answer as a separate row in the examans table
             if (isset($_POST['done'])) {
                 $Ex_id = $exid;
-                $tempsname = $userfname . " " . $userlname;
-                $tempq1 = mysqli_real_escape_string($connect, $_POST['Q1']);
-                $tempq2 = mysqli_real_escape_string($connect, $_POST['Q2']);
-                $tempq3 = mysqli_real_escape_string($connect, $_POST['Q3']);
-                $tempq4 = mysqli_real_escape_string($connect, $_POST['Q4']);
-                $tempq5 = mysqli_real_escape_string($connect, $_POST['Q5']);
+                $answers = [$_POST['Q1'], $_POST['Q2'], $_POST['Q3'], $_POST['Q4'], $_POST['Q5']];
 
-                // Insert Assessment Answers
-                $sql = "INSERT INTO `examans` (ExamID, Senrl, Sname, Ans1, Ans2, Ans3, Ans4, Ans5)
-                        VALUES ('$Ex_id','$sEno','$tempsname','$tempq1','$tempq2','$tempq3','$tempq4','$tempq5')";
+                foreach ($answers as $index => $answer) {
+                    $questionNumber = $index + 1;
+                    $sanitizedAnswer = mysqli_real_escape_string($conn, $answer);
+                    $sql = "INSERT INTO examans (ExamID, RollNumber, Answer, MarksObtained) VALUES ('$Ex_id', '$sEno', '$sanitizedAnswer', 0)";
 
-                if (mysqli_query($connect, $sql)) {
-                    // Insert Progress Tracking for Last 20 Days
-                    $testName = "Sample Test";  // Replace dynamically if needed
-                    $progressSql = "INSERT INTO `student_progress` (student_id, activity, activity_date)
-                                    VALUES ('$userid', 'Assessment Completed: $testName', CURDATE())";
-
-                    if (mysqli_query($connect, $progressSql)) {
-                        echo "<br><br>
-                        <div class='alert alert-success fade in'>
-                            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                            <strong>Success!</strong> Assessment has been submitted and recorded.
-                        </div>";
-                    } else {
-                        echo "<br><strong>Progress Recording Failed.</strong> Error: " . mysqli_error($connect);
+                    if (!mysqli_query($conn, $sql)) {
+                        echo "<br><strong>Failed to save answer for Question $questionNumber.</strong> Error: " . mysqli_error($conn);
                     }
-                } else {
-                    echo "<br><strong>Assessment Submission Failed.</strong> Error: " . mysqli_error($connect);
                 }
 
-                mysqli_close($connect);
+                // Insert Progress Tracking
+                $progressSql = "INSERT INTO student_progress (RollNumber, activity, activity_date) VALUES ('$userid', 'Assessment Completed: $Ex_id', CURDATE())";
+
+                if (mysqli_query($conn, $progressSql)) {
+                    echo "<br><br><div class='alert alert-success fade in'>
+                    <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                    <strong>Success!</strong> Assessment has been submitted and recorded.
+                    </div>";
+                } else {
+                    echo "<br><strong>Progress Recording Failed.</strong> Error: " . mysqli_error($conn);
+                }
+
+                mysqli_close($conn);
             }
             ?>
         </div>

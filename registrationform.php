@@ -65,7 +65,9 @@
 			$fname = $_POST[ 'fname' ];
 			$lname = $_POST[ 'lname' ];
 			$faname = $_POST[ 'faname' ];
+			 $rollnumber = $_POST['rollnumber'];
 			$course = $_POST[ 'course' ];
+			$year = $_POST['year'];
 			$dob = $_POST[ 'dob' ];
 			$addrs = $_POST[ 'addrs' ];
 			$gender = $_POST[ 'gender' ];
@@ -73,22 +75,14 @@
 			$email = $_POST[ 'email' ];
 			$pass = $_POST[ 'pass' ];
 
-			$done = "
-<center>
-<div class='alert alert-success fade in __web-inspector-hide-shortcut__'' style='margin-top:10px;'>
-<a href='#' class='close' data-dismiss='alert' aria-label='close' title='close'>&times;</a>
-<strong><h3 style='margin-top: 10px;
-margin-bottom: 10px;'> Register Successfully Complete. Now You Can Login With Your Email & Password</h3>
-</strong>
-</div>
-</center>
-";
+			$sql = "INSERT INTO studenttable (FName, LName, FaName, RollNumber, Course, Year, DOB, Addrs, Gender, PhNo, Email, Pass) 
+            VALUES ('$fname', '$lname', '$faname', '$rollnumber', '$course', '$year', '$dob', '$addrs', '$gender', '$phno', '$email', '$pass')";
 
-			$sql = "INSERT INTO `studenttable` (`FName`, `LName`, `FaName`, `DOB`, `Addrs`, `Gender`, `PhNo`, `Eid`, `Pass`,`Course`) VALUES ('$fname','$lname','$faname','$dob','$addrs','$gender','$phno','$email','$pass','$course')";
-			//close the connection
-			mysqli_query( $connect, $sql );
-
-			echo $done;
+    if (mysqli_query($connect, $sql)) {
+        echo "<div class='alert alert-success'>Registration successful. You can now log in.</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Error: " . mysqli_error($connect) . "</div>";
+    }
 		}
 
 		?>
@@ -127,11 +121,53 @@ margin-bottom: 10px;'> Register Successfully Complete. Now You Can Login With Yo
 
 					<div class="control-group form-group">
 						<div class="controls">
-							<label>Course: <span style="color: #ff0000;">*</span></label>
-							<input type="text" class="form-control" name="course" id="course" maxlength="10">
+							<label>Roll Number: <span style="color: #ff0000;">*</span></label>
+							<input type="text" class="form-control" name="rollnumber" id="rollnumber" maxlength="30" required>
 							<p class="help-block"></p>
 						</div>
 					</div>
+
+					<div class="control-group form-group">
+						<div class="controls">
+							<label>Course: <span style="color: #ff0000;">*</span></label>
+							<select class="form-control" name="course" id="course" required>
+								<option value="Computer Engineering">Computer Engineering</option>
+								<option value="Information Technology">Information Technology</option>
+								<option value="Electronics & Telecommunication">Electronics & Telecommunication</option>
+								<option value="AI/DS">AI/DS</option>
+								<option value="BS&H">BS&H</option>
+							</select>
+							<p class="help-block"></p>
+						</div>
+					</div>
+
+					<div class="control-group form-group">
+						<div class="controls">
+							<label>Year: <span style="color: #ff0000;">*</span></label>
+							<select class="form-control" name="year" id="year" required>
+								<option value="First Year">First Year</option>
+								<option value="Second Year">Second Year</option>
+								<option value="Third Year">Third Year</option>
+								<option value="Fourth Year">Fourth Year</option>
+							</select>
+							<p class="help-block"></p>
+						</div>
+					</div>
+
+					<div class="control-group form-group">
+    <div class="controls">
+        <label>Division: <span style="color: #ff0000;">*</span></label>
+        <select class="form-control" name="division" id="division" required>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+        </select>
+        <p class="help-block"></p>
+    </div>
+</div>
 
 					<div class="control-group form-group">
 						<div class="controls">

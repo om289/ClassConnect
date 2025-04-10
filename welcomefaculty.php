@@ -23,6 +23,7 @@ $fname = $_SESSION[ "fname" ];
 			<a href="resultdetails.php"><button  href="" type="submit" class="btn btn-primary">Edit Result</button></a>
 			<a href="qureydetails.php"> <button  href="" type="submit" class="btn btn-primary">Query</button>
 			<a href="videos.php"> <button  href="" type="submit" class="btn btn-primary">Videos</button>
+			<a href="addschedule.php"> <button type="submit" class="btn btn-primary">Add Schedule</button></a>
 			  
 			<a href="logoutfaculty"><button  href="" type="submit" class="btn btn-danger">Logout</button></a>
 

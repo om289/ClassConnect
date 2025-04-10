@@ -92,6 +92,98 @@ $fname = $_SESSION[ "fname" ];
 			?>	
 			</table>
 			
+			<?php
+			// Fetch submitted answers for a specific assessment
+			$assessmentID = $_GET['assessment_id'];
+			$sql = "SELECT sa.*, st.FName, st.LName FROM submitted_answers sa JOIN studenttable st ON sa.RollNumber = st.RollNumber WHERE sa.AssessmentID = $assessmentID";
+			$result = mysqli_query($connect, $sql);
+
+			if (!$result) {
+				echo "<p>Error: Unable to fetch submitted answers. Please try again later.</p>";
+				exit;
+			}
+
+			if (mysqli_num_rows($result) > 0) {
+				echo "<h3>Submitted Answers</h3><table class='table table-striped'>";
+				echo "<tr><th>Student Name</th><th>Answer</th><th>Marks</th><th>Assign Marks</th></tr>";
+				while ($row = mysqli_fetch_assoc($result)) {
+					echo "<tr>";
+					echo "<td>" . $row['FName'] . " " . $row['LName'] . "</td>";
+					echo "<td>" . $row['Answer'] . "</td>";
+					echo "<td>" . ($row['Marks'] ?? 'Not Assigned') . "</td>";
+					echo "<td><form method='POST' action=''>";
+					echo "<input type='hidden' name='submission_id' value='" . $row['SubmissionID'] . "'>";
+					echo "<input type='number' name='marks' min='0' max='100' required>";
+					echo "<button type='submit' name='assign_marks' class='btn btn-primary'>Assign</button>";
+					echo "</form></td>";
+					echo "</tr>";
+				}
+				echo "</table>";
+			} else {
+				echo "<p>No answers submitted for this assessment.</p>";
+			}
+
+			// Handle marks assignment
+			if (isset($_POST['assign_marks'])) {
+				$submissionID = $_POST['submission_id'];
+				$marks = $_POST['marks'];
+
+				$updateSql = "UPDATE submitted_answers SET Marks = $marks WHERE SubmissionID = $submissionID";
+				if (mysqli_query($connect, $updateSql)) {
+					echo "<p>Marks assigned successfully.</p>";
+				} else {
+					echo "<p>Error: Unable to assign marks. Please try again later.</p>";
+				}
+			}
+			?>
+			
+			<?php
+			// Fetch submitted text answers for a specific assessment
+			if (isset($_GET['assessment_id'])) {
+				$assessmentID = $_GET['assessment_id'];
+				$sql = "SELECT ta.*, st.FName, st.LName FROM text_answers ta JOIN studenttable st ON ta.RollNumber = st.RollNumber WHERE ta.AssessmentID = $assessmentID";
+				$result = mysqli_query($connect, $sql);
+
+				if (!$result) {
+					echo "<p>Error: Unable to fetch submitted answers. Please try again later.</p>";
+					exit;
+				}
+
+				if (mysqli_num_rows($result) > 0) {
+					echo "<h3>Submitted Text Answers</h3><table class='table table-striped'>";
+					echo "<tr><th>Student Name</th><th>Answer</th><th>Marks</th><th>Assign Marks</th></tr>";
+					while ($row = mysqli_fetch_assoc($result)) {
+						echo "<tr>";
+						echo "<td>" . $row['FName'] . " " . $row['LName'] . "</td>";
+						echo "<td>" . $row['Answer'] . "</td>";
+						echo "<td>" . ($row['Marks'] ?? 'Not Assigned') . "</td>";
+						echo "<td><form method='POST' action=''>";
+						echo "<input type='hidden' name='answer_id' value='" . $row['AnswerID'] . "'>";
+						echo "<input type='number' name='marks' min='0' max='100' required>";
+						echo "<button type='submit' name='assign_marks' class='btn btn-primary'>Assign</button>";
+						echo "</form></td>";
+						echo "</tr>";
+					}
+					echo "</table>";
+				} else {
+					echo "<p>No text answers submitted for this assessment.</p>";
+				}
+			}
+
+			// Handle marks assignment for text answers
+			if (isset($_POST['assign_marks'])) {
+				$answerID = $_POST['answer_id'];
+				$marks = $_POST['marks'];
+
+				$updateSql = "UPDATE text_answers SET Marks = $marks WHERE AnswerID = $answerID";
+				if (mysqli_query($connect, $updateSql)) {
+					echo "<p>Marks assigned successfully.</p>";
+				} else {
+					echo "<p>Error: Unable to assign marks. Please try again later.</p>";
+				}
+			}
+			?>
+			
 		</div>
 	</div>
 	<?php include('allfoot.php');  ?>
