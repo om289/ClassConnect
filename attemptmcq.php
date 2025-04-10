@@ -9,6 +9,21 @@ $roll = $_SESSION["rollno"];
 $sname = $_SESSION["sname"];
 $conn = new mysqli("localhost", "root", "", "cc_db");
 
+// Check if exam is selected
+$exam_id = isset($_GET["exam_id"]) ? $_GET["exam_id"] : null;
+
+// Prevent multiple attempts
+$already_attempted = false;
+if ($exam_id) {
+    $check = $conn->prepare("SELECT * FROM mcq_results WHERE rollno = ? AND exam_id = ?");
+    $check->bind_param("si", $roll, $exam_id);
+    $check->execute();
+    $res = $check->get_result();
+    if ($res->num_rows > 0) {
+        $already_attempted = true;
+    }
+}
+
 // Handle MCQ submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_mcq"])) {
     $exam_id = $_POST["exam_id"];
@@ -23,13 +38,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_mcq"])) {
         }
     }
 
+
     // Store result
     $conn->query("INSERT INTO mcq_results (rollno, exam_id, score, total) VALUES ('$roll', '$exam_id', $score, $total)");
 
-    echo "<div style='color:green;'>You scored $score out of $total</div><hr>";
-}
+    $enrollment = $_SESSION["enrollment"];
+    $conn->query("INSERT INTO result (Eno, Ex_ID, Marks, RollNumber) 
+                VALUES ('$enrollment', '$exam_id', '$score', '$roll')");
 
-// Show MCQ form
+
+    echo "<div style='color:green;'>You scored $score out of $total</div><hr>";
+    $already_attempted = true; // So questions don’t show again
+}
 ?>
 
 <?php include("shead.php"); ?>
@@ -42,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_mcq"])) {
             <?php
             $result = $conn->query("SELECT ExamID, ExamName FROM examdetails");
             while ($row = $result->fetch_assoc()) {
-                $selected = (isset($_GET["exam_id"]) && $_GET["exam_id"] == $row["ExamID"]) ? "selected" : "";
+                $selected = ($exam_id == $row["ExamID"]) ? "selected" : "";
                 echo "<option value='" . $row["ExamID"] . "' $selected>" . $row["ExamName"] . "</option>";
             }
             ?>
@@ -51,27 +71,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_mcq"])) {
     </form>
 
     <?php
-    if (isset($_GET["exam_id"])) {
-        $exam_id = $_GET["exam_id"];
-        $questions = $conn->query("SELECT * FROM mcq_questions WHERE exam_id=$exam_id");
-
-        if ($questions->num_rows > 0) {
-            echo "<form method='POST'>";
-            echo "<input type='hidden' name='exam_id' value='$exam_id'>";
-            echo "<hr>";
-            $qno = 1;
-            while ($q = $questions->fetch_assoc()) {
-                echo "<p><strong>Q$qno. " . $q["question"] . "</strong></p>";
-                echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='A' required> A. " . $q["option_a"] . "</label><br>";
-                echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='B'> B. " . $q["option_b"] . "</label><br>";
-                echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='C'> C. " . $q["option_c"] . "</label><br>";
-                echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='D'> D. " . $q["option_d"] . "</label><br><hr>";
-                $qno++;
-            }
-            echo "<button type='submit' name='submit_mcq' class='btn btn-success'>Submit Answers</button>";
-            echo "</form>";
+    if ($exam_id) {
+        if ($already_attempted) {
+            echo "<p style='color:red; margin-top:20px;'><strong>You have already attempted this assessment.</strong></p>";
         } else {
-            echo "<p style='color:red;'>No MCQs found for this exam.</p>";
+            $questions = $conn->query("SELECT * FROM mcq_questions WHERE exam_id=$exam_id");
+
+            if ($questions->num_rows > 0) {
+                echo "<form method='POST'>";
+                echo "<input type='hidden' name='exam_id' value='$exam_id'>";
+                echo "<hr>";
+                $qno = 1;
+                while ($q = $questions->fetch_assoc()) {
+                    echo "<p><strong>Q$qno. " . $q["question"] . "</strong></p>";
+                    echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='A' required> A. " . $q["option_a"] . "</label><br>";
+                    echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='B'> B. " . $q["option_b"] . "</label><br>";
+                    echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='C'> C. " . $q["option_c"] . "</label><br>";
+                    echo "<label><input type='radio' name='answers[" . $q["id"] . "]' value='D'> D. " . $q["option_d"] . "</label><br><hr>";
+                    $qno++;
+                }
+                echo "<button type='submit' name='submit_mcq' class='btn btn-success'>Submit Answers</button>";
+                echo "</form>";
+            } else {
+                echo "<p style='color:red;'>No MCQs found for this exam.</p>";
+            }
         }
     }
     ?>

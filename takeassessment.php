@@ -1,18 +1,15 @@
 <?php
 session_start();
 
-// Check if the session variable "seno" is set
-if (!isset($_SESSION["seno"]) || $_SESSION["seno"] == "") {
-    // Redirect to the login page if "seno" is not set
-    header('Location:studentlogin.php');
+if (empty($_SESSION["sidx"])) {
+    header('Location: studentlogin.php');
     exit();
 }
 
-// Retrieve session variables
 $userid = $_SESSION["sidx"];
-$userfname = isset($_SESSION["fname"]) ? $_SESSION["fname"] : "Student";
-$userlname = isset($_SESSION["lname"]) ? $_SESSION["lname"] : "";
-$sEno = $_SESSION["seno"]; // Ensure "seno" is properly retrieved
+$userfname = $_SESSION["fname"];
+$userlname = $_SESSION["lname"];
+$sEno = $_SESSION["seno"] ?? ''; // ✅ Safe check to prevent undefined warning
 
 include('studenthead.php');
 ?>
@@ -53,6 +50,30 @@ include('studenthead.php');
             ?>
         </div>
     </div>
-</div>
 
-<?php include('allfoot.php'); ?>
+    <!-- Progress Section for Last 20 Days -->
+    <div class="progress">
+        <h3>Last 20 Days</h3>
+        <?php
+        $sql = "SELECT activity, activity_date FROM student_progress 
+                WHERE student_id = '$userid' 
+                AND activity_date >= DATE_SUB(CURDATE(), INTERVAL 20 DAY)
+                ORDER BY activity_date DESC";
+
+        $result = mysqli_query($connect, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<div class='progress-item'>
+                        <strong>{$row['activity']}</strong>
+                        <span>({$row['activity_date']})</span>
+                      </div>";
+            }
+        } else {
+            echo "<p>No recent activities recorded.</p>";
+        }
+        ?>
+    </div>
+
+    <?php include('allfoot.php'); ?>
+</div>
