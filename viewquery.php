@@ -17,7 +17,13 @@ $userlname = $_SESSION[ "lname" ];
 			<?php 
 
 include('database.php');
-$seid=$_GET['eid'];
+$seid = isset($_GET['eid']) ? $_GET['eid'] : null;
+if ($seid === null) {
+    echo "<div class='alert alert-danger'>
+            <strong>Error!</strong> Missing query identifier. Please try again later.
+          </div>";
+    exit();
+}
 //below query will print the existing record of query
 $sql="SELECT * FROM query WHERE Eid='$seid'";
 $rs=mysqli_query($connect,$sql);

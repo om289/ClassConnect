@@ -186,7 +186,17 @@
 		</div>
 	</div>
 	
-
+	<div class="row text-center" style="margin-top: 30px;">
+		<div class="col-md-4">
+			<a href="studentlogin.php" class="btn btn-primary btn-lg" style="width: 100%;">Student Login</a>
+		</div>
+		<div class="col-md-4">
+			<a href="facultylogin.php" class="btn btn-success btn-lg" style="width: 100%;">Faculty Login</a>
+		</div>
+		<div class="col-md-4">
+			<a href="adminlogin.php" class="btn btn-danger btn-lg" style="width: 100%;">Admin Login</a>
+		</div>
+	</div>
 
 	<hr>
 

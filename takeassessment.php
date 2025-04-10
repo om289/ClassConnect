@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Debugging: Log session variables at the start of takeassessment.php
+error_log("Session Variables at takeassessment.php: " . print_r($_SESSION, true));
+
 // Check if the session variable "seno" is set
 if (!isset($_SESSION["seno"]) || $_SESSION["seno"] == "") {
     // Redirect to the login page if "seno" is not set
@@ -32,8 +35,8 @@ include('studenthead.php');
             $division = isset($_SESSION['division']) ? $_SESSION['division'] : '';
 
             if (empty($division)) {
-                echo "<p>Error: Division information is missing. Please update your profile or contact the administrator.</p>";
-                exit;
+                echo "<p>Warning: Division information is missing. Defaulting to 'General'.</p>";
+                $division = 'General'; // Default division
             }
 
             $sql = "SELECT * FROM assessment WHERE Course = '$course' AND Year = '$year' AND Division = '$division'";

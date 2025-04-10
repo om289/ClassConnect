@@ -4,6 +4,11 @@ include('database.php');
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=assessment_results.csv');
 
+if (!isset($_GET['assessment_id']) || empty($_GET['assessment_id'])) {
+    echo "<p>Error: Missing assessment identifier. Please try again later.</p>";
+    exit();
+}
+
 $output = fopen('php://output', 'w');
 fputcsv($output, array('Student Name', 'Roll Number', 'Assessment Name', 'Marks'));
 

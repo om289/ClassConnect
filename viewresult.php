@@ -17,7 +17,15 @@ $userlname = $_SESSION[ "lname" ];
 			<?php 
 
 include('database.php');
-$seno=$_GET['seno'];
+
+// Check if 'seno' exists in the $_GET array before using it
+if (isset($_GET['seno'])) {
+    $seno = $_GET['seno'];
+} else {
+    echo "<p>Error: 'seno' parameter is missing. Please provide a valid enrolment number.</p>";
+    exit();
+}
+
 //below query will print the existing record of result
 $sql="SELECT * FROM result WHERE RollNumber='$seno'";
 $rs=mysqli_query($connect,$sql);

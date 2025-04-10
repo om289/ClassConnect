@@ -6,6 +6,11 @@ if (!isset($_SESSION['sidx']) || empty($_SESSION['sidx'])) {
     exit();
 }
 
+if (!isset($_GET['assessment_id']) || empty($_GET['assessment_id'])) {
+    echo "<p>Error: Missing assessment identifier. Please try again later.</p>";
+    exit();
+}
+
 include('database.php');
 
 $assessmentID = $_GET['assessment_id'];

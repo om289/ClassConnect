@@ -166,7 +166,7 @@ if (empty($userid)) {
                 <button onclick="location.href='welcomestudent.php'">Overview</button>
                 <button onclick="location.href='mydetailsstudent.php?myds=<?php echo $_SESSION['sidx']; ?>'">Profile</button>
                 <button onclick="location.href='takeassessment.php'">Take Assessment</button>
-                <button onclick="location.href='viewresult.php'">Result</button>
+                <button onclick="location.href='viewresult.php?seno=<?php echo $_SESSION['seno']; ?>'">Result</button>
                 <button onclick="location.href='viewquery.php'">My Query</button>
                 <button onclick="location.href='askquery.php'">Ask Query</button>
                 <button onclick="location.href='viewvideos.php'">Videos (E-Learn)</button>

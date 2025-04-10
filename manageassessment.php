@@ -94,6 +94,10 @@ $fname = $_SESSION[ "fname" ];
 			
 			<?php
 			// Fetch submitted answers for a specific assessment
+			if (!isset($_GET['assessment_id']) || empty($_GET['assessment_id'])) {
+				echo "<p>Error: Missing assessment identifier. Please try again later.</p>";
+				exit();
+			}
 			$assessmentID = $_GET['assessment_id'];
 			$sql = "SELECT sa.*, st.FName, st.LName FROM submitted_answers sa JOIN studenttable st ON sa.RollNumber = st.RollNumber WHERE sa.AssessmentID = $assessmentID";
 			$result = mysqli_query($connect, $sql);

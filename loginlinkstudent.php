@@ -21,6 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['course'] = $row['Course'];
         $_SESSION['year'] = $row['Year'];
         $_SESSION['studentID'] = $row['RollNumber']; // Set StudentID for session validation
+        $_SESSION['division'] = $row['Division']; // Set division in session
+        
+        // Debugging: Log session variables after login
+        error_log("Session Variables after login: " . print_r($_SESSION, true));
+        error_log("Division for student: " . (isset($row['Division']) ? $row['Division'] : 'Not Set'));
+        
         header('Location:welcomestudent.php');
     } else {
         echo "<script>alert('Invalid Email or Password');</script>";
