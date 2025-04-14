@@ -3,7 +3,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p class="footer text-center">> project Made by <strong>om,sid,lakshay,nikunj</strong></p>
+                    <p class="footer text-center">© <strong>om , sid , lakshay , nikunj</strong></p>
                 </div>
             </div>
         </footer>

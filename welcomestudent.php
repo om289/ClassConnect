@@ -56,6 +56,7 @@ $userlname = $_SESSION["lname"];
             <li><a href="viewresult.php?seno=<?php echo $sEno; ?>">Result</a></li>
             <li><a href="viewquery.php?eid=<?php echo $userid; ?>">My Query</a></li>
             <li><a href="askquery.php?eid=<?php echo $userid; ?>">Ask Query</a></li>
+            <li><a href="ansquery.php?eid=<?php echo $userid; ?>">Asswer Query</a></li>
             <li><a href="viewvideos.php?eid=<?php echo $userid; ?>">Videos (E-Learn)</a></li>
         </ul>
     </div>
@@ -73,24 +74,30 @@ $userlname = $_SESSION["lname"];
 
         <section class="dashboard">
             <div class="dashboard-sections">
-                <div class="schedule">
-                    <h3>Today's Schedule</h3>
-                    <div class="schedule-item">
-                        <span>09 am</span>
-                        <div class="course-card">
-                            <p>Information Techno</p>
-                            <small>Advanced Technology</small>
-                            <button>Invite</button>
-                        </div>
+                <<div class="schedule">
+    <h3>Today's Schedule</h3>
+    <?php
+    $today = date('l'); // Gets current day name (e.g., Monday)
+    $sql = "SELECT * FROM schedules 
+            WHERE day = '$today'
+            ORDER BY start_time";
+    $result = mysqli_query($conn, $sql);
+    
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo '<div class="schedule-item">
+                    <span>'.date("h:i A", strtotime($row['start_time'])).'</span>
+                    <div class="course-card">
+                        <p>'.htmlspecialchars($row['activity']).'</p>
+                        <small>'.date("h:i A", strtotime($row['end_time'])).'</small>
                     </div>
-                    <div class="schedule-item">
-                        <span>11 am</span>
-                        <div class="course-card">
-                            <p>Landing Page</p>
-                            <button>Dashboard</button>
-                        </div>
-                    </div>
-                </div>
+                  </div>';
+        }
+    } else {
+        echo '<p>No schedule for today.</p>';
+    }
+    ?>
+</div>
 
                 <div class="progress">
                     <h3>Last 20 Days</h3>
@@ -118,37 +125,61 @@ $userlname = $_SESSION["lname"];
                     ?>
                 </div>
             </div>
-
             <section class="leaderboard">
-    <h3>Leaderboard</h3>
+    <h3>Class Leaderboard</h3>
     <table>
         <tr>
             <th>Rank</th>
             <th>Name</th>
-            <th>Total Assessments</th>
-            <th>Latest Activity</th>
+            <th>Total Marks</th>
+            <th>Assessments Taken</th>
+            <th>Latest Assessment</th>
         </tr>
         <?php
-        $sql = "SELECT 
-                    ROW_NUMBER() OVER (ORDER BY total_assessments DESC) AS rank,
-                    student_name,
-                    total_assessments,
-                    latest_activity
-                FROM leaderboard";
+        // Get current student's class info
+        $class_sql = "SELECT Year, Division FROM studenttable WHERE Eid = '$userid'";
+        $class_result = mysqli_query($conn, $class_sql);
+        
+        // Initialize default values
+        $year = '';
+        $division = '';
+        
+        if($class_result && mysqli_num_rows($class_result) > 0) {
+            $class = mysqli_fetch_assoc($class_result);
+            $year = $class['Year'] ?? '';
+            $division = $class['Division'] ?? '';
+        }
 
-        $result = mysqli_query($conn, $sql);
+        // Leaderboard query
+        $leaderboard_sql = "SELECT 
+                            s.FName, 
+                            s.LName,
+                            COALESCE(SUM(r.Marks), 0) AS total_marks,
+                            COUNT(r.Ex_ID) AS assessments_taken,
+                            MAX(r.EvaluationDate) AS latest_assessment
+                        FROM studenttable s
+                        LEFT JOIN result r ON s.Eno = r.Eno
+                        WHERE s.Year = '$year' 
+                            AND s.Division = '$division'
+                        GROUP BY s.Eno
+                        ORDER BY total_marks DESC";
+
+        $result = mysqli_query($conn, $leaderboard_sql);
+        $rank = 1;
 
         if (mysqli_num_rows($result) > 0) {
-            while ($entry = mysqli_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>
-                        <td>{$entry['rank']}</td>
-                        <td>{$entry['student_name']}</td>
-                        <td>{$entry['total_assessments']}</td>
-                        <td>{$entry['latest_activity']}</td>
+                        <td>{$rank}</td>
+                        <td>" . htmlspecialchars($row['FName'] . " " . $row['LName']) . "</td>
+                        <td>{$row['total_marks']}</td>
+                        <td>{$row['assessments_taken']}</td>
+                        <td>" . ($row['latest_assessment'] ? date('d M Y', strtotime($row['latest_assessment'])) : 'N/A') . "</td>
                       </tr>";
+                $rank++;
             }
         } else {
-            echo "<tr><td colspan='4'>No leaderboard data found.</td></tr>";
+            echo "<tr><td colspan='5'>No leaderboard data found.</td></tr>";
         }
         ?>
     </table>
@@ -157,13 +188,6 @@ $userlname = $_SESSION["lname"];
         </section>
     </div>
 
-    <aside class="profile">
-        <div class="profile-card">
-            <img src="profile.jpg" alt="Profile">
-            <h4><?php echo htmlspecialchars($userfname . " " . $userlname); ?></h4>
-            <p>Student</p>
-        </div>
-    </aside>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="SCRIPT.JS"></script>

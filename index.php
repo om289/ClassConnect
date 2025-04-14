@@ -1,194 +1,192 @@
 <?php include('allhead.php'); ?>
+<!DOCTYPE html>
+<html lang="en" class="apple-theme">
+<head>
+    <style>
+        :root {
+            --apple-black: #000;
+            --apple-dark: #1d1d1f;
+            --apple-blue: #0071e3;
+            --apple-light: #f5f5f7;
+            --apple-gradient: linear-gradient(45deg, #2c2c2e, #1d1d1f);
+        }
 
-<!-- Header Carousel -->
-<header id="myCarousel" class="carousel slide">
-	<!-- Indicators -->
-	<ol class="carousel-indicators">
-		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-		<li data-target="#myCarousel" data-slide-to="1"></li>
-		<li data-target="#myCarousel" data-slide-to="2"></li>
-	</ol>
+        body {
+            background-color: var(--apple-black);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
 
-	<!-- Wrapper for slides -->
-	<div class="carousel-inner">
-		<div class="item">
-			<div class="fill" style="background-image:url('images/1900x10802.png');"></div>
-			<div class="carousel-caption">
-				<h2 style="color: black;"> Making Learning Easy</h2>
-			</div>
-		</div>
-		<div class="item active">
-			<div class="fill" style="background-image:url('images/1900x10801.png');"></div>
-			<div class="carousel-caption">
-				<a href="registrationform"><h2 style="color: white;">Register Today</h2></a>
-			</div>
-		</div>
-		<div class="item">
-			<div class="fill" style="background-image:url('images/1900x10803.png');"></div>
-			<div class="carousel-caption">
-				<a href="takeassessment"><h2 style="color: white; ">Take Assessment</h2>
-                </div>
+        /* Fixed Hero Section */
+        .apple-hero {
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero-headline {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        /* Visible Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 18px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Clickable Buttons */
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .apple-button {
+            padding: 1rem 2.5rem;
+            background: var(--apple-blue);
+            color: #fff;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .apple-button:hover {
+            background: transparent;
+            border-color: var(--apple-blue);
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Visible Technology Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            background: var(--apple-gradient);
+            position: relative;
+            z-index: 3;
+        }
+
+        .tech-logo {
+            width: 100%;
+            height: 100px;
+            object-fit: contain;
+            transition: filter 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Clickable Elements -->
+    <section class="apple-hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="images/hero.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1 class="hero-headline">Welcome to Cloud Classrooms</h1>
+            <div class="cta-buttons">
+                <a href="registrationform" class="apple-button">Get Started</a>
+                <a href="about" class="apple-button">Learn More</a>
             </div>
         </div>
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"></span>
-        </a>
-				<a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"></span>
-        </a>
-			
-</header>
+    </section>
 
-<!-- Page Content -->
-<div class="container" style="max-width: 1200px;">
+    <!-- Visible Feature Section -->
+    <section class="feature-grid">
+        <div class="feature-card">
+            <h3>Interactive Learning</h3>
+            <p>Access course materials and video lectures anytime, anywhere.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Smart Scheduling</h3>
+            <p>Automated class schedules and assessment tracking.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Cloud Integration</h3>
+            <p>Seamless access across all your devices.</p>
+        </div>
+    </section>
 
-	<!-- Marketing Icons Section -->
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header">
-                    Welcome to CLOUD CLASSROOMS
-                </h1>
-		
-		</div>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4><i class="fa fa-fw fa-check"></i> About Us</h4>
-				</div>
-				<div class="panel-body">
-					<ul style="list-style-type:disc">
-						<li>
-							<p>The “Cloud Classrooms” Website (web based application) is useful for the
-							students, faculty, guest whomever likes to learn from web using E-Learn
-							(Videos), as well Check result, schedules of assessment and all that task like
-							event, news, students can find out list of fresh courses offered by them and
-							admission procedure, discussion forum, fee structure etc. without going to
-							institute. It provides the facility to the students or guest to have complete
-							information about the institute.
-						</p>
-					</li>
-					
-					</ul>
-						
-					<a href="about" class="btn btn-default">Learn More</a>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4><i class="fa fa-fw fa-gift"></i> Objectives</h4>
-				</div>
-				<div class="panel-body">
-					<p>
-					<ul style="list-style-type:disc">
-						<li>Keep records of all Students, Faculty, Admin & Guest.</li>
-						<li>To make the institute truly a paperless institute.</li>
-						<li>To learn from by watching videos (e-learn).
-						</li>
-						<li>To make the institute truly a Cloud Based Institute.
-						</li>
-						<li>For reducing manual work and mental conflict.<br></li>
+    <!-- Technology Section -->
+    <section class="tech-grid">
+        <img src="images/apache.png" alt="PHP" class="tech-logo">
+        <img src="images/mysql1.png" alt="MySQL" class="tech-logo">
+        <img src="images/bs2.png" alt="Bootstrap" class="tech-logo">
+        <img src="images/hcj.png" alt="JavaScript" class="tech-logo">
+    </section>
 
-						</ul>
-					 </p>
-					<a href="about" class="btn btn-default">Learn More</a>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4><i class="fa fa-fw fa-compass"></i> Project Category & Technology Used</h4>
-				</div>
-				<div class="panel-body">
-					<p>
-					<ul style="list-style-type:disc">
-					<li>RDBMS (Relational Database Management System)</li>
-					<li>BOOTSTRAP</li>
-					<li>APACHE SERVER</li>
-					<li>PHP</li>
-					<li>MYSQL</li>
-					</ul>
-					</p>
-					<a href="about" class="btn btn-default">Learn More</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /.row -->
+    <script>
+        // Ensure elements are clickable
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize any required components
+            const buttons = document.querySelectorAll('.apple-button');
+            buttons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+            });
+        });
 
-	<!-- Portfolio Section -->
-	<div class="row">
-		<div class="col-lg-12">
-			<h2 class="page-header">TECHNOLOGY USED</h2>
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/apache_webserver_logo.png" alt="">
-                </a>
-		
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/14522157584_a67ab2e898_o.png" alt="">
-                </a>
-		
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/687474703a2f2f707265636973696f6e2d736f6674776172652e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031342f30342f6a5175726572792e676966.gif" alt="">
-                </a>
-		
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/Javascript-shopping-cart.png" alt="">
-                </a>
-		
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/maxresdefault.jpg" alt="">
-                </a>
-		
-		</div>
-		<div class="col-md-4 col-sm-6">
-			<a href="#">
-                    <img class="img-responsive img-portfolio img-hover" src="images/3271.jpg" alt="">
-                </a>
-		
-		</div>
-	</div>
-	<!-- /.row -->
-
-	<!-- Features Section -->
-	<div class="row">
-		<div class="col-lg-12">
-			<h2 class="page-header">CLOUD CLASSROOMS</h2>
-		</div>
-		<div class="col-md-6">
-			
-			<ul>
-				<li><strong>Bootstrap v3.3.7</strong>
-				</li>
-				<li>jQuery v1.11.1</li>
-				<li>Font Awesome v4.2.0</li>
-				<li>Working PHP with validation</li>
-				<li>Unstyled page elements for easy customization</li>
-				<li>65 PHP pages</li>
-			</ul>
-			
-		</div>
-		<div class="col-md-6">
-			<img class="img-responsive" src="images/7fb1f193435815a86c8484f82b9589e1.jpg" alt="">
-		</div>
-	</div>
-	
-
-
-	<hr>
-
-
-	<?php include('allfoot.php'); ?>
+        // Initialize dropdowns
+        $(document).ready(function(){
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+</body>
+</html>
+<?php include('allfoot.php'); ?>

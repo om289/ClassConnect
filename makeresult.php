@@ -1,92 +1,75 @@
 <?php
 session_start();
-
-if ( $_SESSION[ "fidx" ] == "" || $_SESSION[ "fidx" ] == NULL ) {
-	header( 'Location:facultylogin' );
+if ($_SESSION["fidx"] == "" || $_SESSION["fidx"] == NULL) {
+    header('Location: facultylogin');
 }
 
-$userid = $_SESSION[ "fidx" ];
-$fname = $_SESSION[ "fname" ];
+include('database.php');
+$examid = $_GET['examid'];
+$enrl = $_GET['enrl'];
 
+// Get exam answers
+$sql = "SELECT * FROM examans WHERE ExamID = $examid AND Senrl = '$enrl'";
+$result = mysqli_query($connect, $sql);
+$submission = mysqli_fetch_assoc($result);
 ?>
-<?php include('fhead.php');  ?>
+<?php include('fhead.php'); ?>
+
 <div class="container">
-	<div class="row">
-		<div class="col-md-8">
-
-			<h3> Welcome Faculty : <a href="welcomefaculty.php" ><span style="color:#FF0004"> <?php echo $fname; ?></span></a> </h3>
-
-			<?php
-			include( 'database.php' );
-			$make = $_GET[ 'makeid' ];
-			//selecting data form result table form database
-			$sql = "SELECT * FROM examans WHERE ExamID=$make";
-			$rs = mysqli_query( $connect, $sql );
-			while ( $row = mysqli_fetch_array( $rs ) ) {
-				?>
-			<fieldset>
-				<legend>Make Result</legend>
-				<form action="" method="POST" name="makeresult">
-					<table class="table table-hover">
-
-						<tr>
-							<td><strong>Enrolment number  </strong>
-							</td>
-							<td>
-								<?php $eno=$row['Senrl']; echo $eno; ?>
-							</td>
-
-						</tr>
-						<tr>
-							<td><strong>Exam ID:</strong> </td>
-							<td>
-								<?php $ExamID= $row['ExamID']; echo $ExamID; ?>
-							</td>
-						</tr>
-						<tr>
-							<td><strong>Marks</strong> </td>
-							<td>
-								<select class="form-control" name="marks" required>
-									<option value="">---Select---</option>
-									<option value="Pass">Pass</option>
-									<option value="Fail">Fail</option>
-									<option value="Under Progress">Under Progress</option>
-								</select>
-							</td>
-						</tr>
-						<td><button type="submit" name="make" class="btn btn-primary">Make</button>
-						</td>
-						<?php
-						}
-						?>
-						<?php 
-
-if(isset($_POST['make']))
-{
-$mark= $_POST['marks'];
-
-$sql="INSERT INTO `result`(`Eno`, `Ex_ID`, `Marks`) VALUES ($eno, '$ExamID' ,'$mark')";
-
-if (mysqli_query($connect, $sql)) {
-echo "
-<br><br>
-<div class='alert alert-success fade in'>
-<a href='ResultDetails.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-<strong>Success!</strong> Result Updated.
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Evaluating Exam: <?php echo $examid; ?></h3>
+            <h4>Student: <?php echo $enrl; ?></h4>
+            
+            <form method="POST" action="saveresult.php">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Question</th>
+                        <th>Student Answer</th>
+                        <th>Marks (0-4)</th>
+                    </tr>
+                    
+                    <?php for($q=1; $q<=5; $q++): ?>
+                    <tr>
+                        <td>Q<?php echo $q; ?></td>
+                        <td><?php echo htmlspecialchars($submission['Ans'.$q]); ?></td>
+                        <td>
+                            <input type="number" name="marks[]" class="marks-input" 
+                                   min="0" max="4" required 
+                                   oninput="calculateTotal()">
+                        </td>
+                    </tr>
+                    <?php endfor; ?>
+                    
+                    <tr>
+                        <td colspan="2" class="text-right"><strong>Total Marks:</strong></td>
+                        <td>
+                            <input type="text" id="totalMarks" name="total" 
+                                   class="form-control" readonly>
+                        </td>
+                    </tr>
+                </table>
+                
+                <input type="hidden" name="examid" value="<?php echo $examid; ?>">
+                <input type="hidden" name="enrl" value="<?php echo $enrl; ?>">
+                <button type="submit" class="btn btn-success">Save Result</button>
+            </form>
+        </div>
+    </div>
 </div>
-";
-} else {
-	//error message if SQL query fails
-echo "<br><Strong>Result Updation Faliure. Try Again</strong><br> Error Details: " . $sql . "<br>" . mysqli_error($connect);
 
-//close the connection
+<script>
+function calculateTotal() {
+    let total = 0;
+    document.querySelectorAll('.marks-input').forEach(input => {
+        total += parseInt(input.value) || 0;
+    });
+    document.getElementById('totalMarks').value = total;
+}
+// Calculate initial total
+calculateTotal();
+</script>
+
+<?php include('allfoot.php'); 
 mysqli_close($connect);
-}
-}
 ?>
-					</table>
-				</form>
-			</fieldset>
-		</div>
-	</div>
-	<?php include('allfoot.php');  ?>
