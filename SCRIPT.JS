@@ -111,3 +111,49 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
+// Interactive Query Submission Validation
+document.addEventListener("DOMContentLoaded", () => {
+    const queryForm = document.querySelector('form[name="update"]');
+    if (queryForm) {
+        const queryTextarea = queryForm.querySelector('textarea[name="squeryx"]');
+        if (queryTextarea) {
+            // Create error container dynamically
+            const errDiv = document.createElement('div');
+            errDiv.className = 'query-error-msg';
+            errDiv.style.color = 'red';
+            errDiv.style.fontSize = '12px';
+            errDiv.style.marginTop = '5px';
+            errDiv.style.display = 'none';
+            queryTextarea.parentNode.insertBefore(errDiv, queryTextarea.nextSibling);
+
+            queryForm.addEventListener('submit', (e) => {
+                const queryVal = queryTextarea.value.trim();
+                if (queryVal.length < 15) {
+                    e.preventDefault();
+                    errDiv.textContent = 'Query is too short! Please describe your question in at least 15 characters.';
+                    errDiv.style.display = 'block';
+                    queryTextarea.style.borderColor = 'red';
+                } else if (queryVal.length > 500) {
+                    e.preventDefault();
+                    errDiv.textContent = 'Query is too long! Keep it under 500 characters.';
+                    errDiv.style.display = 'block';
+                    queryTextarea.style.borderColor = 'red';
+                } else {
+                    errDiv.style.display = 'none';
+                    queryTextarea.style.borderColor = '';
+                }
+            });
+
+            // Live validation check on input
+            queryTextarea.addEventListener('input', () => {
+                const queryVal = queryTextarea.value.trim();
+                if (queryVal.length >= 15 && queryVal.length <= 500) {
+                    errDiv.style.display = 'none';
+                    queryTextarea.style.borderColor = '#2e7d32'; // Green success border
+                }
+            });
+        }
+    }
+});
