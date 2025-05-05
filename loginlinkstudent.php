@@ -21,6 +21,9 @@ if ( $result->num_rows > 0 )
 		$_SESSION[ "fname" ] = $row[ "FName" ];
 		$_SESSION[ "lname" ] = $row[ "LName" ];
 		$_SESSION[ "seno" ] = $row[ "Eno" ];
+		$_SESSION["course"] = $row["Course"];
+        $_SESSION["year"] = $row["Year"];
+        $_SESSION["division"] = $row["Division"];
 
 	} //redirecting to welcome student page
 	header( 'Location:welcomestudent.php' );

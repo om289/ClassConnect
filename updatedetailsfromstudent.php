@@ -57,7 +57,30 @@ $userlname = $_SESSION[ "lname" ];
 				</div>
 				<div class="form-group">
 					Password : <input type="text" name="pass" value="<?PHP echo $row['Pass'];?>"><br>
-				</div><br>
+				</div>
+				<div class="form-group">
+                    <label for="year">Year:</label>
+                    <select name="year" id="year" class="form-control" required>
+                        <option value="">-- Select Year --</option>
+                        <option value="FY">First Year (FY)</option>
+                        <option value="SY">Second Year (SY)</option>
+                        <option value="TY">Third Year (TY)</option>
+                        <option value="LY">Final Year (LY)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="division">Division:</label>
+                    <select name="division" id="division" class="form-control" required>
+                        <option value="">-- Select Division --</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+				<br>
 				<div class="form-group">
 
 					<input type="submit" value="Update!" name="update" class="btn btn-primary">
@@ -94,6 +117,10 @@ $userlname = $_SESSION[ "lname" ];
 </div>
 
 ";
+					// Update session variables
+					$_SESSION['course'] = $tempcourse;
+					$_SESSION['year'] = $_POST['year'];
+					$_SESSION['division'] = $_POST['division'];
 				} else {
 					//below statement will print error if SQL query fail.
 					echo "<br><Strong>Student Updation Faliure. Try Again</strong><br> Error Details: " . $sql . "<br>" . mysqli_error( $connect );

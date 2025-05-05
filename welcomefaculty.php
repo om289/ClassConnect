@@ -23,8 +23,40 @@ $fname = $_SESSION["fname"];
             <a href="videos.php"><button type="submit" class="btn btn-primary">Videos</button></a>
             <!-- New Schedule Management Button -->
             <a href="faculty_schedule.php"><button type="button" class="btn btn-primary">Manage Schedule</button></a>
-            
+            <a href="uploadmaterials.php"><button type="submit" class="btn btn-primary">Upload Class Notes</button></a>
+            <button onclick="location.href='createclassroom.php'" class="btn btn-primary mt-3">Manage Classrooms</button>
+            <a href="uploadclassroommaterials.php" class="btn btn-primary mt-3">Manage Classroom Content</a>
             <a href="logoutfaculty"><button type="submit" class="btn btn-danger">Logout</button></a>
         </div>
     </div>
-    <?php include('allfoot.php'); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Assigned Queries</h3>
+            <?php
+            include('database.php');
+            $querySql = "SELECT Qid, Query, CreatedAt FROM query WHERE FacultyID='$userid'";
+            $queryResult = mysqli_query($connect, $querySql);
+
+            if (mysqli_num_rows($queryResult) > 0) {
+                echo "<table class='table table-striped'>
+                        <tr>
+                            <th>Query ID</th>
+                            <th>Query</th>
+                            <th>Created At</th>
+                        </tr>";
+                while ($row = mysqli_fetch_assoc($queryResult)) {
+                    echo "<tr>
+                            <td>" . $row['Qid'] . "</td>
+                            <td>" . $row['Query'] . "</td>
+                            <td>" . $row['CreatedAt'] . "</td>
+                          </tr>";
+                }
+                echo "</table>";
+            } else {
+                echo "<p>No queries assigned to you.</p>";
+            }
+            ?>
+        </div>
+    </div>
+</div>
+<?php include('allfoot.php'); ?>

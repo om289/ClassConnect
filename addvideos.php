@@ -67,6 +67,44 @@ $fname = $_SESSION[ "fname" ];
 								<textarea name="Videoinfo" rows="5" cols="150"></textarea>
 							</td>
 						</tr>
+						<tr>
+							<td><strong>Class Notes/Materials</strong></td>
+							<td>
+								<input type="file" name="classnotes" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+							</td>
+						</tr>
+						<tr>
+							<td><strong>Course</strong></td>
+							<td>
+								<input type="text" name="course" required>
+							</td>
+						</tr>
+						<tr>
+							<td><strong>Year</strong></td>
+							<td>
+								<select name="year" required>
+									<option value="">-- Select Year --</option>
+									<option value="FY">First Year (FY)</option>
+									<option value="SY">Second Year (SY)</option>
+									<option value="TY">Third Year (TY)</option>
+									<option value="LY">Final Year (LY)</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><strong>Division</strong></td>
+							<td>
+								<select name="division" required>
+									<option value="">-- Select Division --</option>
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+									<option value="F">F</option>
+								</select>
+							</td>
+						</tr>
 						
 						<td><button type="submit" name="submit" class="btn btn-primary">Add Video</button>
 						</td>

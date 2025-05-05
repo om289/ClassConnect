@@ -17,7 +17,14 @@ $userlname = $_SESSION[ "lname" ];
 			<h3> Welcome <a href="welcomestudent.php" <?php echo "<span style='color:red'>".$userfname." ".$userlname."</span>";?> </a></h3>
 			<?php 
 include('database.php');
-$eid=$_GET['eid']; //get data form another page
+
+// Check if 'eid' exists in the URL
+if (!isset($_GET['eid']) || empty($_GET['eid'])) {
+    echo "<div class='alert alert-danger'>Error: Enrollment ID (eid) is missing. Please try again.</div>";
+    exit();
+}
+
+$eid = $_GET['eid']; // Get data from the URL
 
 ?>
 			<div class="container">
@@ -43,6 +50,21 @@ $eid=$_GET['eid']; //get data form another page
 										<tr><strong><h3>Query :</h3></strong> </tr><br <tr><textarea rows="10" cols="40" name="squeryx" class="form-control" required></textarea>
 										</tr>
 									</td>
+									<td>
+										<tr><strong><h3>Select Faculty:</h3></strong></tr>
+										<tr>
+											<select name="faculty_id" class="form-control" required>
+												<option value="">-- Select Faculty --</option>
+												<?php
+												$facultyQuery = "SELECT FID, FName FROM facutlytable";
+												$facultyResult = mysqli_query($connect, $facultyQuery);
+												while ($facultyRow = mysqli_fetch_assoc($facultyResult)) {
+													echo "<option value='" . $facultyRow['FID'] . "'>" . $facultyRow['FName'] . "</option>";
+												}
+												?>
+											</select>
+										</tr>
+									</td>
 								</table>
 								<br>
 								<input type="submit" value="Post Query!" name="addq" class="btn btn-primary">
@@ -56,7 +78,8 @@ $eid=$_GET['eid']; //get data form another page
 				//fetch data from table 
 				$tempsquery = $_POST[ 'squeryx' ];
 				$tempseid = $eid;
-				$sql = "INSERT INTO `query`(`Query`, `Eid`) VALUES ('$tempsquery','$tempseid')";
+				$tempFacultyID = $_POST['faculty_id'];
+				$sql = "INSERT INTO `query`(`Query`, `Eid`, `FacultyID`) VALUES ('$tempsquery','$tempseid','$tempFacultyID')";
 				if ( mysqli_query( $connect, $sql ) ) {
 					echo "<br>
 <br><br>

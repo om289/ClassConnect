@@ -17,16 +17,22 @@ $userlname = $_SESSION[ "lname" ];
 			<?php 
 
 include('database.php');
-$seid=$_GET['eid'];
+if (!isset($_GET['eno']) || empty($_GET['eno'])) {
+    echo "<div class='alert alert-danger'>Error: Enrollment ID (eno) is missing. Please try again.</div>";
+    include('allfoot.php');
+    exit();
+}
+$seid=$_GET['eno'];
 //below query will print the existing record of query
-$sql="SELECT * FROM query WHERE Eid='$seid'";
+$sql="SELECT Qid, Query, Ans, CreatedAt FROM query WHERE Eid='$seid'";
 $rs=mysqli_query($connect,$sql);
 echo "<h2 class='page-header'>Query View</h2>";
 echo "<table class='table table-striped' style='width:100%'>
 <tr>
 <th>Query ID</th>
 <th>Query</th>
-<th>Ans</th>						
+<th>Answer</th>
+<th>Created At</th>
 </tr>";
 while($row=mysqli_fetch_array($rs))
 {
@@ -40,6 +46,9 @@ while($row=mysqli_fetch_array($rs))
 				</td>
 				<td>
 					<?PHP echo $row['Ans'];?>
+				</td>
+				<td>
+					<?PHP echo $row['CreatedAt'];?>
 				</td>
 			</tr>
 			<?php

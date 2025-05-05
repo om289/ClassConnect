@@ -83,6 +83,7 @@
 			$pass = $_POST[ 'pass' ];
 			$year = $_POST['year'];
 			$division = $_POST['division'];
+			 $enrollment = $_POST['enrollment'];
 			$done = "
 <center>
 <div class='alert alert-success fade in __web-inspector-hide-shortcut__'' style='margin-top:10px;'>
@@ -94,8 +95,8 @@ margin-bottom: 10px;'> Register Successfully Complete. Now You Can Login With Yo
 </center>
 ";
 
-$sql = "INSERT INTO `studenttable` (`FName`, `LName`, `FaName`, `DOB`, `Addrs`, `Gender`, `PhNo`, `Eid`, `Pass`, `Course`, `Year`, `Division`) 
-					VALUES ('$fname','$lname','$faname','$dob','$addrs','$gender','$phno','$email','$pass','$course','$year','$division')";
+$sql = "INSERT INTO `studenttable` (`FName`, `LName`, `FaName`, `DOB`, `Addrs`, `Gender`, `PhNo`, `Eid`, `Pass`, `Course`, `Year`, `Division`, `Eno`) 
+					VALUES ('$fname','$lname','$faname','$dob','$addrs','$gender','$phno','$email','$pass','$course','$year','$division', '$enrollment')";
 			//close the connection
 			mysqli_query( $connect, $sql );
 
@@ -138,13 +139,20 @@ $sql = "INSERT INTO `studenttable` (`FName`, `LName`, `FaName`, `DOB`, `Addrs`, 
 
 					
 					
-					<!-- Existing Course Field -->
-					<div class="control-group form-group">
-						<div class="controls">
-							<label>Course: <span style="color: #ff0000;">*</span></label>
-							<input type="text" class="form-control" name="course" id="course" maxlength="10">
-						</div>
-					</div>
+					 <!-- Updated Course Dropdown -->
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>Course: <span style="color: #ff0000;">*</span></label>
+                            <select class="form-control" name="course" id="course" required>
+                                <option value="">-- Select Course --</option>
+                                <option value="Computer">Computer</option>
+                                <option value="IT">IT</option>
+                                <option value="EXTC">EXTC</option>
+                                <option value="AIDS">AIDS</option>
+                                <option value="BS&H">BS&H</option>
+                            </select>
+                        </div>
+                    </div>
 
 					<!-- New Year Dropdown -->
 					<div class="control-group form-group">
@@ -173,6 +181,15 @@ $sql = "INSERT INTO `studenttable` (`FName`, `LName`, `FaName`, `DOB`, `Addrs`, 
 								<option value="E">E</option>
 								<option value="F">F</option>
 							</select>
+						</div>
+					</div>
+
+					<!-- New Enrollment Number Field -->
+					<div class="control-group form-group">
+						<div class="controls">
+							<label>Enrollment Number: <span style="color: #ff0000;">*</span></label>
+							<input type="text" class="form-control" name="enrollment" id="enrollment" maxlength="20" required>
+							<p class="help-block"></p>
 						</div>
 					</div>
 

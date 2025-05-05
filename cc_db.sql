@@ -177,6 +177,7 @@ CREATE TABLE `query` (
   `Query` text NOT NULL,
   `Ans` text NOT NULL,
   `Eid` varchar(35) NOT NULL,
+  `FacultyID` int(11) NOT NULL,
   `Qid` int(11) NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
@@ -185,11 +186,11 @@ CREATE TABLE `query` (
 -- Dumping data for table `query`
 --
 
-INSERT INTO `query` (`Query`, `Ans`, `Eid`, `Qid`, `CreatedAt`) VALUES
-('														b  ', 'cdnliw					b																', 'hello@CC.com', 11, '2025-04-01 18:44:35'),
-('							c ', '			c										', 'hello@CC.com', 12, '2025-04-01 18:44:35'),
-('Dear Sir,\r\nCan I do M.SC. ?\r\nPlease Answer Soon..\r\nThanks ', 'Yes, First you complete M.tech.							', 'harsh@cc.com', 13, '2025-04-01 18:44:35'),
-('bjgvjb', '', 'ommetha13@gmail.com', 14, '2025-04-01 18:44:35');
+INSERT INTO `query` (`Query`, `Ans`, `Eid`, `FacultyID`, `Qid`, `CreatedAt`) VALUES
+('														b  ', 'cdnliw					b																', 'hello@CC.com', 1, 11, '2025-04-01 18:44:35'),
+('							c ', '			c										', 'hello@CC.com', 1, 12, '2025-04-01 18:44:35'),
+('Dear Sir,\r\nCan I do M.SC. ?\r\nPlease Answer Soon..\r\nThanks ', 'Yes, First you complete M.tech.							', 'harsh@cc.com', 1, 13, '2025-04-01 18:44:35'),
+('bjgvjb', '', 'ommetha13@gmail.com', 1, 14, '2025-04-01 18:44:35');
 
 -- --------------------------------------------------------
 
@@ -331,6 +332,85 @@ INSERT INTO `video` (`V_id`, `V_Title`, `V_Url`, `V_Remarks`) VALUES
 (4, 'CSS Grid ', '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/HgwCeNVPlo0?rel=0&amp;showinfo=0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>', 'How to create website layouts using CSS grid'),
 (5, 'JQuery', '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/BWXggB-T1jQ\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>', 'JQuery Tutorial:\r\nQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML. It is free, open-source software using the permissive MIT License.'),
 (6, 'JSON ', '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/JuFdz8f-cT4\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>', 'JavaScript Object Notation or JSON is an open-standard file format that uses human-readable text to transmit data objects consisting of attributeâ€“value pairs and array data types (or any other serializable value).\r\nIt is a very common data format used for asynchronous browserâ€“server communication, including as a replacement for XML in some AJAX-style systems.\r\nJSON is a language-independent data format.\r\nIt was derived from JavaScript, ');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `class_notes`
+--
+
+CREATE TABLE `class_notes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` INT(11) NOT NULL,
+  `course` VARCHAR(50) NOT NULL,
+  `year` VARCHAR(10) NOT NULL,
+  `division` VARCHAR(10) NOT NULL,
+  `file_name` VARCHAR(255) NOT NULL,
+  `file_path` VARCHAR(255) NOT NULL,
+  `uploaded_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`faculty_id`) REFERENCES `facutlytable`(`FID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Example data insertion
+-- INSERT INTO `class_notes` (`faculty_id`, `course`, `year`, `division`, `file_name`, `file_path`) VALUES
+-- (101, 'B.Tech', 'SY', 'A', 'Lecture1.pdf', '/uploads/Lecture1.pdf');
+
+-- --------------------------------------------------------
+
+--
+-- Table for classrooms
+--
+CREATE TABLE classrooms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    faculty_id INT NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    unique_code VARCHAR(10) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (faculty_id) REFERENCES facutlytable(FID)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table for classroom members
+--
+CREATE TABLE classroom_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    classroom_id INT NOT NULL,
+    student_id INT NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (classroom_id) REFERENCES classrooms(id),
+    FOREIGN KEY (student_id) REFERENCES studenttable(Eno)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table for classroom materials
+--
+CREATE TABLE classroom_materials (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    classroom_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (classroom_id) REFERENCES classrooms(id)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table for classroom announcements
+--
+CREATE TABLE classroom_announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    classroom_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (classroom_id) REFERENCES classrooms(id)
+);
 
 -- --------------------------------------------------------
 

@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             VALUES ('$qid', '$userid', '$answer')";
     
     if (mysqli_query($conn, $sql)) {
-        header("Location: viewquery.php");
+        header("Location: viewquery.php?eno=$userid");
         exit();
     } else {
         $error = "Error submitting answer: " . mysqli_error($conn);

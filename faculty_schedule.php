@@ -222,6 +222,17 @@ while ($row = mysqli_fetch_assoc($filter_query)) {
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Course</label>
+                            <select name="course" class="form-select" required>
+                                <option value="">Select Course</option>
+                                <option value="Computer">Computer</option>
+                                <option value="IT">IT</option>
+                                <option value="EXTC">EXTC</option>
+                                <option value="AIDS">AIDS</option>
+                                <option value="BS&H">BS&H</option>
+                            </select>
+                        </div>
                         <div class="col-md-6">
                             <label class="form-label">Activity</label>
                             <input type="text" name="activity" class="form-control" placeholder="Class/Lab name" required>
