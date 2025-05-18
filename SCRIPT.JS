@@ -1,3 +1,4 @@
+﻿/* Dashboard Interaction Script - Updated May 2025 */
 // Sidebar Toggle (Optional if collapsible)
 document.querySelectorAll('.sidebar ul li').forEach(item => {
     item.addEventListener('click', function () {
@@ -84,3 +85,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
