@@ -41,6 +41,53 @@ include('studenthead.php');
             
             <fieldset>
                 <legend>Assessment Details</legend>
+                
+                <div id="assessment-timer" style="position: sticky; top: 10px; right: 10px; background: #ff6600; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; float: right; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15)">
+                    Time Remaining: <span id="timer-countdown">20:00</span>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        let duration = 20 * 60; // 20 minutes
+                        const timerDisplay = document.getElementById('timer-countdown');
+                        const assessmentForm = document.querySelector('form[name="update"]');
+                        
+                        if (sessionStorage.getItem('assessment_timer_left')) {
+                            duration = parseInt(sessionStorage.getItem('assessment_timer_left'), 10);
+                        }
+                        
+                        const interval = setInterval(() => {
+                            const minutes = Math.floor(duration / 60);
+                            const seconds = duration % 60;
+                            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            
+                            if (duration <= 0) {
+                                clearInterval(interval);
+                                sessionStorage.removeItem('assessment_timer_left');
+                                alert('Time is up! Your assessment will be submitted automatically.');
+                                if (assessmentForm) {
+                                    const autoInput = document.createElement('input');
+                                    autoInput.type = 'hidden';
+                                    autoInput.name = 'done';
+                                    autoInput.value = '1';
+                                    assessmentForm.appendChild(autoInput);
+                                    assessmentForm.submit();
+                                }
+                            } else {
+                                duration--;
+                                sessionStorage.setItem('assessment_timer_left', duration);
+                            }
+                        }, 1000);
+                        
+                        if (assessmentForm) {
+                            assessmentForm.addEventListener('submit', () => {
+                                clearInterval(interval);
+                                sessionStorage.removeItem('assessment_timer_left');
+                            });
+                        }
+                    });
+                </script>
+
                 <form action="" method="POST" name="update">
                     <div class="col-md-4">
                         <table>
